@@ -31,5 +31,7 @@ namespace AuthorizationApp.Services
         public string HashPassword(string password);
 
         public bool VerifyHashedPassword(string hashedPassword, string password);
+
+        public int? GetUserFromToken(string token);
     }
 }

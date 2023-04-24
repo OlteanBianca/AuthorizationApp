@@ -14,42 +14,45 @@ namespace AuthorizationApp.Services
         #endregion
 
         #region Public Methods
-        public void Register(RegisterDTO registerData)
+        public async Task<bool> Register(RegisterDTO registerData)
         {
             if (registerData == null)
             {
-                return;
+                return false;
             }
 
             Student? student = registerData.ToStudent();
             if (student == null)
             {
-                return;
+                return false;
             }
 
             User? user = registerData.ToUser();
             if (user == null)
             {
-                return;
+                return false;
             }
 
             var hashedPassword = _authService.HashPassword(registerData.Password);
             user.Password = hashedPassword;
 
-            user = _unitOfWork.Users.Insert(user);
+            user = await _unitOfWork.Users.Insert(user);
+            await _unitOfWork.SaveChanges();
             student.Id = user.Id;
 
-            _unitOfWork.Students.Insert(student);
-            _unitOfWork.SaveChanges();
+            await _unitOfWork.Students.Insert(student);
+            await _unitOfWork.SaveChanges();
+
+            return true;
         }
 
-        public string Validate(LoginDTO payload)
+        public async Task<string> Validate(LoginDTO payload)
         {
-            User? user = _unitOfWork.Users.GetByEmail(payload.Email);
+            User? user = await _unitOfWork.Users.GetByEmail(payload.Email);
 
             if (user != null && _authService.VerifyHashedPassword(user.Password, payload.Password))
             {
-                Role? role = _unitOfWork.Roles.GetById(user.RoleId);
+                Role? role = await _unitOfWork.Roles.GetById(user.RoleId);
 
                 if (role != null)
                 {

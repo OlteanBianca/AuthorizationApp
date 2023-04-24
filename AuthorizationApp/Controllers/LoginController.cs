@@ -24,19 +24,19 @@ namespace AuthorizationApp.Controllers
 
         #region Public Methods
 
-        [HttpPost("/register")]
+        [HttpPost("~/register")]
         [AllowAnonymous]
-        public IActionResult Register(RegisterDTO payload)
+        public async Task<IActionResult> Register(RegisterDTO payload)
         {
-            _userService.Register(payload);
+            await _userService.Register(payload);
             return Ok();
         }
 
         [HttpPost("/login")]
         [AllowAnonymous]
-        public IActionResult Login(LoginDTO payload)
+        public async Task<IActionResult> Login(LoginDTO payload)
         {
-            var jwtToken = _userService.Validate(payload);
+            var jwtToken = await _userService.Validate(payload);
             return Ok(new { token = jwtToken });
         }
 
@@ -57,12 +57,7 @@ namespace AuthorizationApp.Controllers
             return Ok(result);
         }
 
-        [HttpGet("students-only")]
-        [Authorize(Roles = "Student")]
-        public ActionResult<string> HelloStudents()
-        {
-            return Ok("Hello students!");
-        }
+       
 
         [HttpGet("teacher-only")]
         [Authorize(Roles = "Teacher")]

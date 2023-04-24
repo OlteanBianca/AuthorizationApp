@@ -5,9 +5,11 @@ namespace AuthorizationApp.Services
 {
     public interface IStudentService
     {
-        public List<Student> GetAll();
+        public Task<List<Student>> GetAll();
 
-        public StudentDTO? GetById(int studentId);
+        public Task<StudentDTO?> GetById(int studentId);
+
+        public Task<List<GradeDTO?>> GetGradesById(int studentId);
 
         public List<string> GetClassStudents(int classId);
 

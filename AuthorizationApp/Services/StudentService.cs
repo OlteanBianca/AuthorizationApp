@@ -14,15 +14,21 @@ namespace AuthorizationApp.Services
         #endregion
 
         #region Public Methods
-        public List<Student> GetAll()
+        public async Task<List<Student>> GetAll()
         {
-            return _unitOfWork.Students.GetAll();
+            return await _unitOfWork.Students.GetAll();
         }
 
-        public StudentDTO? GetById(int studentId)
+        public async Task<StudentDTO?> GetById(int studentId)
         {
-            Student? student = _unitOfWork.Students.GetById(studentId);
+            Student? student = await _unitOfWork.Students.GetById(studentId);
             return student?.ToStudentDTO();
+        }
+
+        public async Task<List<GradeDTO?>> GetGradesById(int studentId)
+        {
+            List<Grade> grades =  await _unitOfWork.Grades.GetGradesByStudentId(studentId);
+            return grades.ToGradesDTO();
         }
 
         public List<string> GetClassStudents(int classId)
@@ -34,6 +40,8 @@ namespace AuthorizationApp.Services
         {
             return _unitOfWork.Students.GetGroupedStudents();
         }
+
+      
         #endregion
     }
 }

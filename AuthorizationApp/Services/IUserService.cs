@@ -4,8 +4,8 @@ namespace AuthorizationApp.Services
 {
     public interface IUserService
     {
-        public void Register(RegisterDTO registerData);
+        public Task<bool> Register(RegisterDTO registerData);
 
-        public string Validate(LoginDTO payload);
+        public Task<string> Validate(LoginDTO payload);
     }
 }

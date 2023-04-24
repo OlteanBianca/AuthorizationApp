@@ -10,24 +10,7 @@ namespace AuthorizationApp.Repositories
         {
         }
 
-        public Student? GetByIdWithGrades(int studentId, string type)
-        {
-            var result = _dbContext.Students
-               .Select(e => new Student
-               {
-                   FirstName = e.FirstName,
-                   LastName = e.LastName,
-                   Id = e.Id,
-                   ClassId = e.ClassId,
-                   Grades = e.Grades
-                        .Where(g => g.Course == type)
-                        .OrderByDescending(g => g.Value)
-                        .ToList()
-               })
-               .FirstOrDefault(e => e.Id == studentId);
-
-            return result;
-        }
+     
 
         public List<string> GetClassStudents(int classId)
         {
@@ -56,9 +39,9 @@ namespace AuthorizationApp.Repositories
             return results;
         }
 
-        public Student? GetByEmail(string email)
-        {
-            return _dbContext.Students.FirstOrDefault(s => s.Email == email);
-        }
+        //public Student? GetByEmail(string email)
+        //{
+        //    return _dbContext.Students.FirstOrDefault(s => s.Email == email);
+        //}
     }
 }

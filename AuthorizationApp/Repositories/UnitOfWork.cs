@@ -13,25 +13,27 @@ namespace AuthorizationApp.Repositories
         public ClassRepository Classes { get; }
         public RoleRepository Roles { get; }
         public UserRepository Users { get; }
+        public GradeRepository Grades { get; }
         #endregion
 
         #region Constructors
-        public UnitOfWork(AppDbContext dbContext, StudentRepository students, ClassRepository classes, RoleRepository roles, UserRepository users)
+        public UnitOfWork(AppDbContext dbContext, StudentRepository students, ClassRepository classes, RoleRepository roles, UserRepository users, GradeRepository grades)
         {
             _dbContext = dbContext;
             Students = students;
             Classes = classes;
             Roles = roles;
             Users = users;
+            Grades = grades;
         }
         #endregion
 
         #region Public Methods
-        public void SaveChanges()
+        public async Task<bool> SaveChanges()
         {
             try
             {
-                _dbContext.SaveChanges();
+                await _dbContext.SaveChangesAsync();
             }
             catch (Exception exception)
             {
@@ -41,7 +43,9 @@ namespace AuthorizationApp.Repositories
                     + $"{exception.StackTrace}\n\n";
 
                 Console.WriteLine(errorMessage);
+                return false;
             }
+            return true;
         }
         #endregion
     }

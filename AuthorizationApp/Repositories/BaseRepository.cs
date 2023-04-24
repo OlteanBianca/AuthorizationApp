@@ -1,6 +1,7 @@
 ﻿using AuthorizationApp.DBContext;
 using AuthorizationApp.Models;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 
 namespace AuthorizationApp.Repositories
 {
@@ -30,19 +31,20 @@ namespace AuthorizationApp.Repositories
         #endregion
 
         #region Public Methods
-        public List<T> GetAll()
+        public async Task<List<T>> GetAll()
         {
-            return GetRecords().ToList();
+            return await GetRecords().ToListAsync();
         }
 
-        public T? GetById(int id)
+        public async Task<T?> GetById(int id)
         {
-            return _dbSet.FirstOrDefault(entity => entity.Id == id);
+            return await _dbSet.FirstOrDefaultAsync(entity => entity.Id == id);
         }
 
-        public T Insert(T entity)
+        public async Task<T> Insert(T entity)
         {
-            return _dbSet.Add(entity).Entity;
+            EntityEntry<T> newEntity = await _dbSet.AddAsync(entity);
+            return newEntity.Entity;
         }
 
         public void Update(T entity)

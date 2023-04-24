@@ -9,7 +9,7 @@ public partial class User : BaseModels
     [Required, MaxLength(50)]
     public string Email { get; set; } = null!;
 
-    [Required, MaxLength(50)]
+    [Required, MaxLength(100)]
     public string Password { get; set; } = null!;
 
     [Required]

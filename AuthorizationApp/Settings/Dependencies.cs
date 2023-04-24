@@ -21,6 +21,7 @@ namespace AuthorizationApp.Settings
             services.AddScoped<RoleRepository>();
             services.AddScoped<UserRepository>();
             services.AddScoped<ClassRepository>();
+            services.AddScoped<GradeRepository>();
             services.AddScoped<UnitOfWork>();
         }
         #endregion

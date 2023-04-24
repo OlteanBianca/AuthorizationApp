@@ -13,9 +13,9 @@ namespace AuthorizationApp.Repositories
         #endregion
 
         #region Public Methods
-        public User? GetByEmail(string email)
+        public async Task<User?> GetByEmail(string email)
         {
-            return _dbContext.Users.FirstOrDefault(s => s.Email == email);
+            return await _dbContext.Users.FirstOrDefaultAsync(s => s.Email == email);
         }
         #endregion
     }
