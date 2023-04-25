@@ -3,15 +3,15 @@ using AuthorizationApp.Models;
 
 namespace AuthorizationApp.Mappings
 {
-    public static class RegisterDTOToUserExtension
-    {     
+    public static class RegisterDTOMapping
+    {
         #region DTO to Entity
 
         public static Student? ToStudent(this RegisterDTO registerData)
         {
             if (registerData == null) return null;
 
-            Student student = new ()
+            Student student = new()
             {
                 FirstName = registerData.FirstName,
                 LastName = registerData.LastName,
@@ -27,7 +27,7 @@ namespace AuthorizationApp.Mappings
         public static User? ToUser(this RegisterDTO registerData)
         {
             if (registerData == null) return null;
-          
+
             User user = new()
             {
                 Email = registerData.Email,
@@ -36,6 +36,19 @@ namespace AuthorizationApp.Mappings
             };
 
             return user;
+        }
+
+        public static LoginDTO? ToLoginDTO(this RegisterDTO registerData)
+        {
+            if (registerData == null) return null;
+
+            LoginDTO loginDTO = new()
+            {
+                Email = registerData.Email,
+                Password = registerData.Password,
+            };
+
+            return loginDTO;
         }
         #endregion
     }

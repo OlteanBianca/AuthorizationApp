@@ -27,21 +27,22 @@ namespace AuthorizationApp.Services
 
         public async Task<List<GradeDTO?>> GetGradesById(int studentId)
         {
-            List<Grade> grades =  await _unitOfWork.Grades.GetGradesByStudentId(studentId);
+            List<Grade> grades = await _unitOfWork.Grades.GetGradesByStudentId(studentId);
             return grades.ToGradesDTO();
         }
 
-        public List<string> GetClassStudents(int classId)
+        public async Task<List<StudentGradesDTO?>> GetStudentsGrades()
         {
-            return _unitOfWork.Students.GetClassStudents(classId);
-        }
+            List<Student> students = await GetAll();
+            List<StudentGradesDTO?> studentsGrades = new();
 
-        public Dictionary<int, List<Student>> GetGroupedStudents()
-        {
-            return _unitOfWork.Students.GetGroupedStudents();
+            foreach (Student student in students)
+            {
+                List<GradeDTO?> grades = await GetGradesById(student.Id);
+                studentsGrades.Add(student.ToStudentGradesDTO(grades));
+            }
+            return studentsGrades;
         }
-
-      
         #endregion
     }
 }

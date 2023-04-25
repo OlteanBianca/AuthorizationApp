@@ -3,7 +3,7 @@ using AuthorizationApp.Models;
 
 namespace AuthorizationApp.Mappings
 {
-    public static class StudentDTOToStudentExtension
+    public static class StudentDTOMapping
     {
         #region DTO to Entity
         public static Student? ToStudent(this StudentDTO studentDTO)

@@ -1,10 +1,10 @@
-﻿using AuthorizationApp.Models;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace AuthorizationApp.DTOs
 {
     public class StudentDTO
     {
+        #region Properties
         [Required, MaxLength(50)]
         public string FirstName { get; set; } = string.Empty;
 
@@ -14,6 +14,7 @@ namespace AuthorizationApp.DTOs
         [Required, MaxLength(50)]
         public string Email { get; set; } = string.Empty;
 
+        [Required]
         public DateTime DateOfBirth { get; set; }
 
         [Required, MaxLength(50)]
@@ -21,5 +22,6 @@ namespace AuthorizationApp.DTOs
 
         [Required]
         public int ClassId { get; set; }
+        #endregion
     }
 }

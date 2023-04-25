@@ -4,6 +4,7 @@ namespace AuthorizationApp.Services
 {
     public interface IAuthorizationService
     {
+        #region Public Methods
         public static bool ByteArraysEqual(byte[] a, byte[] b)
         {
             if (ReferenceEquals(a, b))
@@ -33,5 +34,6 @@ namespace AuthorizationApp.Services
         public bool VerifyHashedPassword(string hashedPassword, string password);
 
         public int? GetUserFromToken(string token);
+        #endregion
     }
 }

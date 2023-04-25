@@ -1,5 +1,4 @@
 ﻿using AuthorizationApp.DTOs;
-using AuthorizationApp.Models;
 using AuthorizationApp.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -9,20 +8,22 @@ using IAuthorizationService = AuthorizationApp.Services.IAuthorizationService;
 namespace AuthorizationApp.Controllers
 {
     [ApiController]
-    [Route("student")]
+    [Route("students")]
     [Authorize]
     public class StudentController : ControllerBase
     {
         #region Private Fields
         private readonly IStudentService _studentService;
         private readonly IAuthorizationService _authorizationService;
+        private readonly IUserService _userService;
         #endregion
 
         #region Constructors
-        public StudentController(IStudentService studentService, IAuthorizationService authorizationService)
+        public StudentController(IStudentService studentService, IAuthorizationService authorizationService, IUserService userService)
         {
             _studentService = studentService;
             _authorizationService = authorizationService;
+            _userService = userService;
         }
         #endregion
 
@@ -30,7 +31,7 @@ namespace AuthorizationApp.Controllers
 
         [HttpGet("getGrades")]
         [Authorize(Roles = "Student")]
-        public async Task<IActionResult> GetGrades()
+        public async Task<IActionResult> GetGradesForStudent()
         {
             string? accessToken = Request.Headers[HeaderNames.Authorization];
             if (accessToken == null)
@@ -39,9 +40,9 @@ namespace AuthorizationApp.Controllers
             }
 
             int? id = _authorizationService.GetUserFromToken(accessToken);
-            if(id == null)
+            if (id == null)
             {
-                return NotFound("No student found!");
+                return NotFound("No user found!");
             }
 
             List<GradeDTO?> grades = await _studentService.GetGradesById((int)id);
@@ -49,18 +50,48 @@ namespace AuthorizationApp.Controllers
             return Ok(grades);
         }
 
-        [HttpGet]
-        public ActionResult<List<Student>> GetAll()
+        [HttpGet("getAllGrades")]
+        [Authorize(Roles = "Teacher")]
+        public async Task<IActionResult> GetGradesForAllStudents()
         {
-            var results = _studentService.GetAll();
+            string? accessToken = Request.Headers[HeaderNames.Authorization];
+            if (accessToken == null)
+            {
+                return BadRequest("Access denied!");
+            }
 
-            return Ok(results);
+            int? id = _authorizationService.GetUserFromToken(accessToken);
+            if (id == null)
+            {
+                return BadRequest("Invalid token!");
+            }
+
+            UserDTO? user = await _userService.GetUserById((int)id);
+            if (user == null)
+            {
+                return NotFound("No user found!");
+            }
+
+            if (!await _userService.CheckIfItsTeacher(user.RoleId))
+            {
+                return BadRequest("User is not a teacher!");
+            }
+
+            List<StudentGradesDTO?> gradesForAllStudents = await _studentService.GetStudentsGrades();
+
+            return Ok(gradesForAllStudents);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetAll()
+        {
+            return Ok(await _studentService.GetAll());
         }
 
         [HttpGet("{id}")]
-        public ActionResult<Student> GetById(int studentId)
+        public async Task<IActionResult> GetById(int id)
         {
-            var result = _studentService.GetById(studentId);
+            StudentDTO? result = await _studentService.GetById(id);
 
             if (result == null)
             {

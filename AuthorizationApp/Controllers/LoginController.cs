@@ -2,7 +2,6 @@
 using AuthorizationApp.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.Security.Claims;
 
 namespace AuthorizationApp.Controllers
 {
@@ -24,46 +23,27 @@ namespace AuthorizationApp.Controllers
 
         #region Public Methods
 
-        [HttpPost("~/register")]
+        [HttpPost("/register")]
         [AllowAnonymous]
         public async Task<IActionResult> Register(RegisterDTO payload)
         {
-            await _userService.Register(payload);
-            return Ok();
+            LoginDTO? user = await _userService.Register(payload);
+
+            if (user == null)
+            {
+                return BadRequest("Credentials not valid!");
+            }
+
+            string jwtToken = await _userService.Validate(user);
+            return Ok(new { token = jwtToken });
         }
 
         [HttpPost("/login")]
         [AllowAnonymous]
         public async Task<IActionResult> Login(LoginDTO payload)
         {
-            var jwtToken = await _userService.Validate(payload);
+            string jwtToken = await _userService.Validate(payload);
             return Ok(new { token = jwtToken });
-        }
-
-        [HttpGet("test-auth")]
-        public IActionResult TestLogin()
-        {
-            ClaimsPrincipal user = User;
-
-            var result = "";
-
-            foreach (var claim in user.Claims)
-            {
-                result += claim.Type + " : " + claim.Value + "\n";
-            }
-            var hasRole_user = user.IsInRole("User");
-            var hasRole_teacher = user.IsInRole("Teacher");
-
-            return Ok(result);
-        }
-
-       
-
-        [HttpGet("teacher-only")]
-        [Authorize(Roles = "Teacher")]
-        public ActionResult<string> HelloTeachers()
-        {
-            return Ok("Hello teachers!");
         }
         #endregion
     }
