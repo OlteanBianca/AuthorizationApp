@@ -2,8 +2,6 @@
 using AuthorizationApp.Mappings;
 using AuthorizationApp.Models;
 using AuthorizationApp.Repositories;
-using Microsoft.EntityFrameworkCore;
-using System.Linq;
 
 namespace AuthorizationApp.Services
 {
@@ -81,15 +79,15 @@ namespace AuthorizationApp.Services
         {
             return (await _unitOfWork.Students.GetStudentCourseGrades(studentId, course))?.ToStudentDTO();
         }
+
         public async Task<Dictionary<int, List<StudentDTO?>>> GetStudentsGroupedByClass()
         {
             return (await _unitOfWork.Students.GetStudentsGroupedByClass()).Select(pair => new KeyValuePair<int, List<StudentDTO?>>
             (
                 pair.Key,
-                pair.Value.Select(student => student.ToStudentDTO()).ToList() 
-            )).ToDictionary(e => e.Key, e=> e.Value);
+                pair.Value.Select(student => student.ToStudentDTO()).ToList()
+            )).ToDictionary(e => e.Key, e => e.Value);
         }
-
         #endregion
     }
 }
