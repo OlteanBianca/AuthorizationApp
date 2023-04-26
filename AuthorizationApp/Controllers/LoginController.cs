@@ -42,7 +42,18 @@ namespace AuthorizationApp.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> Login(LoginDTO payload)
         {
+            if(await _userService.FindUserByEmail(payload.Email) == null)
+            {
+                return BadRequest("Invalid email!");
+            }
+
             string jwtToken = await _userService.Validate(payload);
+
+            if(string.IsNullOrEmpty(jwtToken))
+            {
+                return BadRequest("Invalid password!");
+            }
+
             return Ok(new { token = jwtToken });
         }
         #endregion

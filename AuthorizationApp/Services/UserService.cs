@@ -89,6 +89,11 @@ namespace AuthorizationApp.Services
             return string.Empty;
         }
 
+        public async Task<UserDTO?> FindUserByEmail(string email)
+        {
+            return (await _unitOfWork.Users.GetByEmail(email))?.ToUserDTO();
+        }
+
         public async Task<UserDTO?> GetUserById(int id)
         {
             User? user = await _unitOfWork.Users.GetById(id);

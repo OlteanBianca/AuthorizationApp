@@ -99,6 +99,48 @@ namespace AuthorizationApp.Controllers
             }
             return Ok(result);
         }
+
+        [HttpPatch("editName/{id}")]
+        [Authorize(Roles = "Teacher")]
+        public async Task<IActionResult> EditName([FromBody] StudentDTO studentUpdateModel, int id)
+        {
+            if (studentUpdateModel == null || string.IsNullOrEmpty(studentUpdateModel.LastName) || string.IsNullOrEmpty(studentUpdateModel.FirstName))
+            {
+                return BadRequest("Credentials invalid!");
+            }
+
+            if (!await _studentService.EditName(studentUpdateModel, id))
+            {
+                return BadRequest("Student could not be updated.");
+            }
+            return Ok("Student updated successfully!");
+        }
+
+        [HttpGet("studentCourseGrades/{id}")]
+        public async Task<IActionResult> GetCourseGradesByStudentId([FromBody] string course, int id)
+        {
+            if (course == null || id < 1)
+            {
+                return BadRequest("Invalid request!");
+            }
+            return Ok(await _studentService.GetStudentCourseGrades(id, course));
+        }
+
+        [HttpGet("classStudents/{id}")]
+        public async Task<IActionResult> GetClassStudents(int id)
+        {
+            if (id < 1)
+            {
+                return BadRequest("Invalid id!");
+            }
+            return Ok(await _studentService.GetClassStudents(id));
+        }
+
+        [HttpGet("studentsGroupedByClass")]
+        public async Task<IActionResult> GetGroupedStudents()
+        {
+            return Ok(await _studentService.GetStudentsGroupedByClass());
+        }
         #endregion
     }
 }

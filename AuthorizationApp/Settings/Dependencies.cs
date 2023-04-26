@@ -14,6 +14,7 @@ namespace AuthorizationApp.Settings
             services.AddTransient<IStudentService, StudentService>();
             services.AddTransient<IUserService, UserService>();
             services.AddTransient<IGradeService, GradeService>();
+            services.AddTransient<IClassService, ClassService>();
         }
 
         private static void AddRepositories(IServiceCollection services)

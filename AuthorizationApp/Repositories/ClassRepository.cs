@@ -10,5 +10,8 @@ namespace AuthorizationApp.Repositories
         {
         }
         #endregion
+
+        #region Public Methods
+        #endregion
     }
 }

@@ -17,7 +17,7 @@ namespace AuthorizationApp.Mappings
             {
                 Course = grade.Course,
                 Value = grade.Value,
-                DateCreated = grade.DateCreated
+                DateCreated = grade.DateCreated,
             };
 
             return gradeDTO;

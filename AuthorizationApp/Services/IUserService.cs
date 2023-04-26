@@ -16,6 +16,8 @@ namespace AuthorizationApp.Services
 
         public Task<UserDTO?> GetUserById(int id);
 
+        public Task<UserDTO?> FindUserByEmail(string email);
+
         public Task<bool> CheckIfItsTeacher(int teacherId);
 
         public Task<bool> IsClassValid(int id);

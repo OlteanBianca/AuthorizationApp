@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using AuthorizationApp.Models;
+using System.ComponentModel.DataAnnotations;
 
 namespace AuthorizationApp.DTOs
 {
@@ -22,6 +23,8 @@ namespace AuthorizationApp.DTOs
 
         [Required]
         public int ClassId { get; set; }
+
+        public List<GradeDTO> Grades { get; set; } = new();
         #endregion
     }
 }
